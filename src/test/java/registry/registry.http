@@ -1,0 +1,52 @@
+GET http://localhost:8080/api/registry/packages
+Accept: application/json
+
+###
+
+GET http://localhost:8080/api/registry/packages/search?dokuNumber=0123456789
+
+###
+
+POST http://localhost:8080/api/registry/packages
+Accept: application/json
+Content-Type: application/json
+
+{
+  "doku": "1234567890",
+  "arrival": "2021-08-03",
+  "sender": {
+    "name": "Bela",
+    "address": "Bela címe"
+  },
+  "addressee": {
+    "name": "Bela",
+    "address": "Bela címe"
+  },
+  "storageStatus": "IN_STOCK",
+  "hu_num": "string"
+}
+
+###
+
+PUT http://localhost:8080/api/registry/packages?dokuNumber=0123456789
+Accept: application/json
+Content-Type: application/json
+
+{
+  "doku": "1234567890",
+  "arrival": "2021-08-03",
+  "sender": {
+    "name": "Bela",
+    "address": "Bela címe"
+  },
+  "addressee": {
+    "name": "Bela",
+    "address": "Bela címe"
+  },
+  "storageStatus": "IN_STOCK",
+  "hu_num": "string"
+}
+
+###
+
+DELETE http://localhost:8080/api/adressee/delByName?name=Bela
