@@ -13,6 +13,6 @@ public class NameValidator implements ConstraintValidator<Name, Person> {
             System.out.println("Empty input");
             return false;}
         return person.getName().trim().length()>2 && person.getName().length()<50 &&
-                Character.isUpperCase(person.getName().trim().charAt(0));
+                Character.isUpperCase(person.getName().trim().charAt(0)); // && person.getName().trim().contains(" ");
         }
 }

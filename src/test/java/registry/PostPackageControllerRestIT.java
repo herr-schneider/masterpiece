@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import registry.dtos.AddresseeDto;
 import registry.dtos.ArrivalCommand;
 import registry.dtos.PostPackageDto;
 import registry.entities.Addressee;

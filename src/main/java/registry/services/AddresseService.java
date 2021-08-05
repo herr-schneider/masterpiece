@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class AddresseService {
@@ -93,5 +94,15 @@ public class AddresseService {
         Addressee addressee = addresseeRepo.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Addressee with ID " + id + " not found!"));
         return modelMapper.map(addressee, AddresseeDto.class);
+    }
+
+    public List<AddresseeDto> getAddresseeByName(Optional <String> name) {
+        Optional<String> partName = Stream.of(Optional.of("°%"), name, Optional.of("°%"))
+                .flatMap(Optional::stream).reduce(String::concat);
+        List<AddresseeDto> addressees = addresseeRepo.findByName(partName)
+                .stream()
+                .map(a -> modelMapper.map(a, AddresseeDto.class))
+                .collect(Collectors.toList());
+        return addressees;
     }
 }

@@ -42,9 +42,17 @@ public class AddresseeController {
         return addresseService.listAll();
     }
 
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Listing an addresse", description = "Addressee search by name")
+    @ApiResponse(responseCode = "404", description = "There is not any of addressee!")
+    public List<AddresseeDto> listAddresseeByName(@RequestParam Optional<String> name) {
+        return addresseService.getAddresseeByName(name);
+    }
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Listing an addresse", description = "Addressee with id")
+    @Operation(summary = "Listing an addresse", description = "Addressee search by id")
     @ApiResponse(responseCode = "404", description = "There is not any of addressee!")
     public AddresseeDto getAddressee(@PathVariable("id") long id) {
         return addresseService.getAddressee(id);
