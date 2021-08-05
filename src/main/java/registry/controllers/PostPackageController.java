@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
+import registry.entities.PostPackage;
 import registry.services.PostPackageService;
 import registry.dtos.*;
 import registry.validators.Violation;
@@ -39,6 +40,18 @@ public class PostPackageController {
         return postPackageService.listAll();
     }
 
+    @GetMapping("/packages/search")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Listing a package", description = "Listing a package with doku number")
+    @ApiResponse(responseCode = "404", description = "There is no packages!")
+    public ResponseEntity findByDoku(@RequestParam Optional<String> dokuNumber) {
+        try {
+            return ResponseEntity.ok(postPackageService.findByDoku(dokuNumber));
+        } catch (IllegalArgumentException iae) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/packages")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "A package can be created.",
@@ -60,24 +73,33 @@ public class PostPackageController {
         }
     }
 
+    @PutMapping("/packages/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update a package", description = "Update a \"package\" with Doku number")
+    @ApiResponse(responseCode = "404", description = "Package not found")
+    public ResponseEntity updateWithId(@PathVariable("id") long id,
+                                         @Valid @RequestBody ArrivalCommand command) {
+        try {
+            return ResponseEntity.ok(postPackageService.updateWithId(id, command));
+        } catch (IllegalArgumentException iae) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Delete an addressee", description = "Del a addressee with ID!")
+    @ApiResponse(responseCode = "404", description = "Addressee not found")
+    public PostPackageDto deleteById(@PathVariable("id") long id) {
+        return postPackageService.delById(id);
+    }
+
     @DeleteMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete all packages", description = "Never do this!")
     @ApiResponse(responseCode = "404", description = "Package not found")
     public void deleteAll() {
         postPackageService.delAll();
-    }
-
-    @GetMapping("/packages/search")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Listing a package", description = "Listing a package with doku number")
-    @ApiResponse(responseCode = "404", description = "There is no packages!")
-    public ResponseEntity findByDoku(@RequestParam Optional<String> dokuNumber) {
-        try {
-            return ResponseEntity.ok(postPackageService.findByDoku(dokuNumber));
-        } catch (IllegalArgumentException iae) {
-            return ResponseEntity.notFound().build();
-        }
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

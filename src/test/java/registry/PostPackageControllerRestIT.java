@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import registry.dtos.AddresseeDto;
 import registry.dtos.ArrivalCommand;
 import registry.dtos.PostPackageDto;
 import registry.entities.Addressee;
@@ -50,6 +51,15 @@ public class PostPackageControllerRestIT {
                         new Addressee("Somebody Doe", "Everywhere"),
                         StorageStatus.SEIZED), PostPackageDto.class);
 
+        PostPackageDto aResult = template.exchange(
+                "/api/registry/packages/search?dokuNumber=5555555555",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<PostPackageDto>() {
+                }).getBody();
+
+        assertThat(aResult).isEqualTo(postPackage);
+
         assertThat(postPackage)
                 .extracting(PostPackageDto::getDoku)
                 .isEqualTo("5555555555");
@@ -86,7 +96,7 @@ public class PostPackageControllerRestIT {
     @Test
     void TestListEmployees() {
         template.put("/api/registry/packages?dokuNumber=0123456789",
-                new ArrivalCommand("5555555555", "1111", LocalDate.of(2022,01,01),
+                new ArrivalCommand("5555555555", "1111", LocalDate.of(2022, 01, 01),
                         new Sender("Josef Doe", "Russia"),
                         new Addressee("Somebody Doe", "Everywhere"),
                         StorageStatus.SHIPPED));
@@ -104,16 +114,16 @@ public class PostPackageControllerRestIT {
         assertThat(result.get(0))
                 .extracting(PostPackageDto::getDoku)
                 .isEqualTo("5555555555");
-   }
+    }
 
-   @Test
-    public void testFindbyDoku(){
-       PostPackageDto result = template.exchange(
-               "/api/registry/packages/search?dokuNumber=1234567890",
-               HttpMethod.GET,
-               null,
-               new ParameterizedTypeReference<PostPackageDto>() {
-               }).getBody();
-   }
+    @Test
+    public void testFindbyDoku() {
+        PostPackageDto result = template.exchange(
+                "/api/registry/packages/search?dokuNumber=1234567890",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<PostPackageDto>() {
+                }).getBody();
+    }
 }
 

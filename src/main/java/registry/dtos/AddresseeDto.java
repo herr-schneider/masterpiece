@@ -11,6 +11,8 @@ import java.util.List;
 @Data
 public class AddresseeDto {
 
+    private long id;
+
     private String name;
 
     private String address;

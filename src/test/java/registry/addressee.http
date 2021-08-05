@@ -1,0 +1,49 @@
+GET http://localhost:8080/api/addressee
+Accept: application/json
+
+###
+
+POST http://localhost:8080/api/addressee
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Szabó",
+  "address": "Nagy Ház"
+}
+
+###
+
+PUT http://localhost:8080/api/addressee/update?name=David Doe
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Szabó",
+  "address": "Nagy Ház"
+}
+
+###
+
+PUT http://localhost:8080/api/addressee/update?name=Somebody Doe
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Szabó Ferenc",
+  "address": "Nagy Ház"
+}
+
+###
+
+DELETE http://localhost:8080/api/addressee/1
+
+###
+
+DELETE http://localhost:8080/api/addressee/delByName?name=Bela
+
+###
+
+DELETE http://localhost:8080/api/addressee/all
+
+###
