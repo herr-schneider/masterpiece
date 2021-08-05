@@ -12,6 +12,7 @@ target/
 .settings
 .springBeans
 .sts4-cache
+.mvn
 
 ### IntelliJ IDEA ###
 .idea
@@ -34,3 +35,6 @@ build/
 /mvnw.cmd
 /mvnw
 /~$nyilv.xlsx
+
+### Others ###
+*.xlsx
