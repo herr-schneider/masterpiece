@@ -22,6 +22,7 @@ public class PostPackage {
     @Column(name = "doku_number", nullable = false, length = 10)
     private String doku;
 
+    @Column(name = "hu_num")
     private String huNumber;
 
     private LocalDate arrival;
