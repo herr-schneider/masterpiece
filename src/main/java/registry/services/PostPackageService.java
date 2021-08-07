@@ -1,5 +1,6 @@
 package registry.services;
 
+import nonapi.io.github.classgraph.json.JSONUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,7 @@ import registry.entities.PostPackage;
 import registry.repos.AddresseeRepo;
 import registry.repos.PostPackageRepo;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,7 +47,7 @@ public class PostPackageService {
     }
 
     @Transactional
-    public PostPackageDto updateWithDoku(Optional<String> dokuNum, ArrivalCommand command) throws IllegalArgumentException {
+    public PostPackageDto updateAllWithDoku(Optional<String> dokuNum, ArrivalCommand command) throws IllegalArgumentException {
 //        String doku = numOfPack.orElseThrow(() -> new IllegalArgumentException("Doku number invalid!"));
         String dokuN;
         if (dokuNum.isPresent()){dokuN = dokuNum.get();}
@@ -59,6 +61,27 @@ public class PostPackageService {
         postPackage.setSender(command.getSender());
         addresseeRepo.save(addressee);
         postPackage.setAddressee(addressee);
+        postPackage.setStorageStatus(command.getStorageStatus());
+        return modelMapper.map(postPackage, PostPackageDto.class);
+    }
+
+    @Transactional
+    public PostPackageDto updateWithDoku(Optional<String> dokuNum, ArrivalCommand command) throws IllegalArgumentException {
+       String doku = dokuNum.orElseThrow(() -> new IllegalArgumentException("Doku number invalid!"));
+       PostPackage postPackage = postPackageRepo.findByDoku(doku).orElseThrow(()
+                -> new IllegalArgumentException("Doku number not found!"));
+        if (command.getAddressee().getName()==null){
+            Addressee addressee = command.getAddressee();
+            addresseeRepo.save(addressee);
+            postPackage.setAddressee(addressee);
+        }
+        if (!command.getDoku().isEmpty() || command.getDoku()==null || command.getDoku().isBlank()) {
+            postPackage.setDoku(command.getDoku());}
+        if (!command.getHU_num().isEmpty() || command.getHU_num()==null || command.getHU_num().isBlank()){
+            postPackage.setHuNumber(command.getHU_num());
+        }
+        if (command.getArrival().isAfter(LocalDate.now())) {postPackage.setArrival(command.getArrival());}
+        if (!(command.getSender()==null)) {postPackage.setSender(command.getSender());}
         postPackage.setStorageStatus(command.getStorageStatus());
         return modelMapper.map(postPackage, PostPackageDto.class);
     }

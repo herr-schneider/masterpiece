@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
-import registry.entities.PostPackage;
 import registry.services.PostPackageService;
 import registry.dtos.*;
 import registry.validators.Violation;
@@ -65,6 +64,19 @@ public class PostPackageController {
     @Operation(summary = "Update a package", description = "Update a \"package\" with Doku number")
     @ApiResponse(responseCode = "404", description = "Package not found")
     public ResponseEntity updateWithDoku(@RequestParam Optional<String> dokuNumber,
+                                         @Valid @RequestBody ArrivalCommand command) {
+        try {
+            return ResponseEntity.ok(postPackageService.updateAllWithDoku(dokuNumber, command));
+        } catch (IllegalArgumentException iae) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/packages/test")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update a package", description = "Update a \"package\" with Doku number")
+    @ApiResponse(responseCode = "404", description = "Package not found")
+    public ResponseEntity updateWithDokuWithChecks(@RequestParam Optional<String> dokuNumber,
                                          @Valid @RequestBody ArrivalCommand command) {
         try {
             return ResponseEntity.ok(postPackageService.updateWithDoku(dokuNumber, command));
@@ -126,7 +138,7 @@ public class PostPackageController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Problem> handleNotFound(IllegalArgumentException iae) {
         Problem problem = Problem.builder()
-                .withType(URI.create("/api/emp/param"))
+                .withType(URI.create("/api/registry/param"))
                 .withTitle("Not found!")
                 .withStatus(Status.NOT_FOUND)
                 .withDetail(iae.getMessage())

@@ -9,14 +9,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import registry.dtos.AddresseeDto;
-import registry.dtos.ArrivalCommand;
 import registry.dtos.CreateAddresseeCommand;
-import registry.dtos.PostPackageDto;
-import registry.entities.Addressee;
-import registry.entities.Sender;
-import registry.entities.StorageStatus;
-
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +45,7 @@ public class AddresseeControllerRestIT {
         System.out.println(addresseeDto.getId());
 
         AddresseeDto aResult = template.exchange(
-                "/api/addressee/"+addresseeDto.getId(),
+                "/api/addressee/" + addresseeDto.getId(),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<AddresseeDto>() {
@@ -108,5 +101,36 @@ public class AddresseeControllerRestIT {
         assertThat(result)
                 .hasSize(1);
     }
-}
 
+
+    @Test
+    public void testDeepThroat(){
+        List<AddresseeDto> result = template.exchange(
+                "/api/addressee/deepsearch?name=David",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<AddresseeDto>>() {
+                }).getBody();
+
+        assertThat(result)
+                .hasSize(1);
+
+        assertThat(result.get(0))
+                .extracting(AddresseeDto::getName)
+                .isEqualTo("David Doe");
+
+        result = template.exchange(
+                "/api/addressee/deepsearch?address=Everywhere",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<AddresseeDto>>() {
+                }).getBody();
+
+        assertThat(result)
+                .hasSize(1);
+
+        assertThat(result.get(0))
+                .extracting(AddresseeDto::getAddress)
+                .isEqualTo("Everywhere");
+    }
+}

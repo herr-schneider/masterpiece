@@ -56,6 +56,15 @@ public class AddresseeController {
         return addresseService.getAddressee(id);
     }
 
+    @GetMapping("/deepsearch")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Listing an addresse", description = "Addressee search by name and address")
+    @ApiResponse(responseCode = "404", description = "There is not any of addressee!")
+    public List<AddresseeDto> getAddresseeFiltered(@RequestParam Optional<String> name,
+                                                   @RequestParam Optional<String> address) {
+       return addresseService.getAddresseeFiltered(name, address);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "An addressee can be created.",
@@ -138,7 +147,7 @@ public class AddresseeController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Problem> handleNotFound(IllegalArgumentException iae) {
         Problem problem = Problem.builder()
-                .withType(URI.create("/api/emp/param"))
+                .withType(URI.create("/api/registry/param"))
                 .withTitle("Not found!")
                 .withStatus(Status.NOT_FOUND)
                 .withDetail(iae.getMessage())

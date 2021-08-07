@@ -80,7 +80,7 @@ public class AddresseService {
         return modelMapper.map(addressee, AddresseeDto.class);
     }
 
-    public Object updateWithId(long id, CreateAddresseeCommand command) {
+    public AddresseeDto updateWithId(long id, CreateAddresseeCommand command) {
         Addressee addressee = addresseeRepo.findById(id)
                 .stream()
                 .findFirst()
@@ -94,6 +94,19 @@ public class AddresseService {
         Addressee addressee = addresseeRepo.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Addressee with ID " + id + " not found!"));
         return modelMapper.map(addressee, AddresseeDto.class);
+    }
+
+    public List<AddresseeDto> getAddresseeFiltered(Optional<String> name, Optional<String> address) {
+        List<AddresseeDto> result = addresseeRepo.findAll()
+                .stream()
+                .filter(n -> name.isEmpty() || n.getName().contains(name.get()))
+                .filter(a -> address.isEmpty() || a.getAddress().contains(address.get()))
+                .map(a -> modelMapper.map(a, AddresseeDto.class))
+                .collect(Collectors.toList());
+
+        // Type targetType = new TypeToken<List<EmployeeDto>>() {}.getType();
+
+        return result;
     }
 
     public List<AddresseeDto> getAddresseeByName(Optional <String> name) {
