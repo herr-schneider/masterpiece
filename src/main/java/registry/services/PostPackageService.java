@@ -3,7 +3,6 @@ package registry.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import registry.dtos.AddresseeDto;
 import registry.dtos.ArrivalCommand;
 import registry.dtos.PostPackageDto;
 import registry.entities.Addressee;
@@ -55,7 +54,7 @@ public class PostPackageService {
                 -> new IllegalArgumentException("Doku number not found!"));
         Addressee addressee = command.getAddressee();
         postPackage.setDoku(command.getDoku());
-        postPackage.setHU_num(command.getHU_num());
+        postPackage.setHuNumber(command.getHU_num());
         postPackage.setArrival(command.getArrival());
         postPackage.setSender(command.getSender());
         addresseeRepo.save(addressee);
@@ -90,7 +89,7 @@ public class PostPackageService {
                 -> new IllegalArgumentException("Doku number not found!"));
         Addressee addressee = command.getAddressee();
         postPackage.setDoku(command.getDoku());
-        postPackage.setHU_num(command.getHU_num());
+        postPackage.setHuNumber(command.getHU_num());
         postPackage.setArrival(command.getArrival());
         postPackage.setSender(command.getSender());
         addresseeRepo.save(addressee);

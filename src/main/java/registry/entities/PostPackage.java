@@ -1,6 +1,5 @@
 package registry.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class PostPackage {
     @Column(name = "doku_number", nullable = false, length = 10)
     private String doku;
 
-    private String HU_num;
+    private String huNumber;
 
     private LocalDate arrival;
 
@@ -37,10 +36,10 @@ public class PostPackage {
     @Enumerated(EnumType.STRING)
     private StorageStatus storageStatus;
 
-    public PostPackage(String doku, String HU_num, LocalDate arrival,
+    public PostPackage(String doku, String huNumber, LocalDate arrival,
                        Sender sender, Addressee addressee, StorageStatus storageStatus) {
         this.doku = doku;
-        this.HU_num = HU_num;
+        this.huNumber = huNumber;
         this.arrival = arrival;
         this.sender = sender;
         this.addressee = addressee;
